@@ -13,11 +13,15 @@ class Publishsers():
         self.cmd_msg.linear.y = y
         self.cmd_msg.angular.z = ang
         ### publish ###
-        self.cmd_pub.publish(cmd_msg)
+        self.cmd_pub.publish(self.cmd_msg)
     
-    def pt_make(self, pan, tilt):
-        self        
+    def pan_make(self, p):
+        self.pan_msg = p
+        self.pan_pub.publish(self.pan_msg)        
 
+    def tilt_make(self, t):
+        self.tilt_msg = t
+        self.tilt_pub.publish(self.tilt_msg)    
 
 class Subscribe(Publishsers):
     def __init__(self):
@@ -26,12 +30,47 @@ class Subscribe(Publishsers):
         self.pan_msg = Float64()
         self.tilt_msg = Float64()
 
+        self.pantilt_lock = 0
+
         self.cmd_pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
+        self.pan_pub = rospy.Publisher("/ubiquitous_display/pan_controller/command", Float64, queue_size = 10)
+        self.tilt_pub = rospy.Publisher("/ubiquitous_display/tilt_controller/command", Float64, queue_size = 10)
 
         self.ptm_sub = rospy.Subscriber('joy', Joy, self.callback)
 
 
     def callback(self, msg):
+        angular = 0.0
+        
+        if msg.buttons[8] == 1.0:
+            self.cmd_make(0.0, 0.0, 0.0)
+
+        ### /cmd_vel ###
+        if msg.axes[2] < 0.0 and msg.axes[5] < 0.0:
+            angular = abs(msg.axes[2]) - msg.axes[5]
+            self.cmd_make(-msg.axes[0], msg.axes[1], -angular / 2.0)
+            
+        elif msg.axes[2] < 0.0 and msg.axes[5] >= 0.0:
+            self.cmd_make(-msg.axes[0], msg.axes[1], abs(msg.axes[2]) / 2.0)
+        elif msg.axes[5] < 0.0 and msg.axes[2] >= 0.0:
+            self.cmd_make(-msg.axes[0], msg.axes[1], msg.axes[5] / 2.0)
+        else:
+            self.cmd_make(-msg.axes[0], msg.axes[1], 0.0)
+
+
+        if msg.buttons[10] == 1.0:
+            if self.pantilt_lock == 0:
+                self.pantilt_lock = 1
+            else:
+                self.pantilt_lock = 0
+        
+        if self.pantilt_lock == 0:
+	    ### /pan /tilt ###
+	    self.pan_make(msg.axes[3])
+	    self.tilt_make(-msg.axes[4])
+
+
+            
 
 
 
