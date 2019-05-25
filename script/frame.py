@@ -33,8 +33,8 @@ class Subscribe(Publishsers):
         self.pantilt_lock = 0
 
         self.cmd_pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
-        self.pan_pub = rospy.Publisher("/ubiquitous_display/pan_controller/command", Float64, queue_size = 10)
-        self.tilt_pub = rospy.Publisher("/ubiquitous_display/tilt_controller/command", Float64, queue_size = 10)
+        self.pan_pub = rospy.Publisher("/pan_controller/command", Float64, queue_size = 10)
+        self.tilt_pub = rospy.Publisher("/tilt_controller/command", Float64, queue_size = 10)
 
         self.ptm_sub = rospy.Subscriber('joy', Joy, self.callback)
 
@@ -58,11 +58,10 @@ class Subscribe(Publishsers):
             self.cmd_make(-msg.axes[0], msg.axes[1], 0.0)
 
 
-        if msg.buttons[10] == 1.0:
-            if self.pantilt_lock == 0:
-                self.pantilt_lock = 1
-            else:
-                self.pantilt_lock = 0
+        if msg.buttons[4] == 1.0:
+            self.pantilt_lock = 1
+        if msg.buttons[5] == 1.0:
+            self.pantilt_lock = 0
         
         if self.pantilt_lock == 0:
 	    ### /pan /tilt ###
