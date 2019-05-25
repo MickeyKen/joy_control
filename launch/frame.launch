@@ -1,0 +1,6 @@
+<launch>
+
+  <node pkg="ud_joy_control" name="frame_node" type="frame.py" />
+  <node pkg="joy" name="connect_joy_node" type="joy_node" />
+
+</launch>
