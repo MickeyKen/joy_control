@@ -14,18 +14,18 @@ class Publishsers():
         self.cmd_msg.angular.z = ang
         ### publish ###
         self.cmd_pub.publish(self.cmd_msg)
-    
+
     def pan_make(self, p):
         self.pan_msg = p
-        self.pan_pub.publish(self.pan_msg)        
+        self.pan_pub.publish(self.pan_msg)
 
     def tilt_make(self, t):
         self.tilt_msg = t
-        self.tilt_pub.publish(self.tilt_msg)    
+        self.tilt_pub.publish(self.tilt_msg)
 
 class Subscribe(Publishsers):
     def __init__(self):
-        
+
         self.cmd_msg = Twist()
         self.pan_msg = Float64()
         self.tilt_msg = Float64()
@@ -41,7 +41,7 @@ class Subscribe(Publishsers):
 
     def callback(self, msg):
         angular = 0.0
-        
+
         if msg.buttons[8] == 1.0:
             self.cmd_make(0.0, 0.0, 0.0)
 
@@ -49,7 +49,7 @@ class Subscribe(Publishsers):
         if msg.axes[2] < 0.0 and msg.axes[5] < 0.0:
             angular = abs(msg.axes[2]) - msg.axes[5]
             self.cmd_make(-msg.axes[0], msg.axes[1], -angular / 2.0)
-            
+
         elif msg.axes[2] < 0.0 and msg.axes[5] >= 0.0:
             self.cmd_make(-msg.axes[0], msg.axes[1], abs(msg.axes[2]) / 2.0)
         elif msg.axes[5] < 0.0 and msg.axes[2] >= 0.0:
@@ -62,14 +62,19 @@ class Subscribe(Publishsers):
             self.pantilt_lock = 1
         if msg.buttons[5] == 1.0:
             self.pantilt_lock = 0
-        
+
         if self.pantilt_lock == 0:
 	    ### /pan /tilt ###
 	    self.pan_make(msg.axes[3])
 	    self.tilt_make(-msg.axes[4])
 
+        if msg.buttons[2] == 1.0:
+            rospy.set_param("projector/switch", 1)
+        else:
+            rospy.set_param("projector/switch", 0)
 
-            
+
+
 
 
 
