@@ -1,0 +1,6 @@
+<launch>
+
+  <node pkg="ud_joy_control" name="black_img" type="black_img.py" />
+  <node pkg="ud_joy_control" name="projector" type="projector_node" />
+
+</launch>
