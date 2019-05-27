@@ -14,9 +14,8 @@ def black_img():
 
     black_image = np.zeros((678,1024,3),np.uint8)
 
-    cv2.namedWindow('window')
-    cv2.namedWindow('screen', cv2.WINDOW_NORMAL)
-    cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    # cv2.namedWindow('screen', cv2.WINDOW_NORMAL)
+    # cv2.setWindowProperty('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.imshow('screen', black_image)
     cv2.waitKey(1000)
     while True:

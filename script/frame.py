@@ -40,6 +40,7 @@ class Subscribe(Publishsers):
 
 
     def callback(self, msg):
+        print msg
         angular = 0.0
 
         if msg.buttons[8] == 1.0:
