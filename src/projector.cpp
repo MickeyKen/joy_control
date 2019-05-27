@@ -24,10 +24,10 @@ int main(int argc, char **argv)
   n.setParam("projector/switch", 0);
 
   ///// decide image size in real world
-  float size = 800 / 2;
+  float size = 500 / 2;
   ///// get image and resize projectr size
   std::string file_dir = ros::package::getPath("ud_joy_control") + "/src/image/";
-  std::string input_file_path = file_dir + "pop.png";
+  std::string input_file_path = file_dir + "welcome.png";
   cv::Mat source_img = cv::imread(input_file_path, cv::IMREAD_UNCHANGED);
   int ColumnOfNewImage = 1024;
   int RowsOfNewImage = 768;
