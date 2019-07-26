@@ -3,7 +3,7 @@
 import rospy
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Float64, Int16
+from std_msgs.msg import Float64, Int32
 
 
 class Publishsers():
@@ -34,7 +34,7 @@ class Subscribe(Publishsers):
         self.pan_msg = Float64()
         self.tilt_msg = Float64()
 
-        self.sim_pro_msg = Int16()
+        self.sim_pro_msg = Int32()
 
         self.pantilt_lock = 0
 
@@ -42,7 +42,7 @@ class Subscribe(Publishsers):
         self.pan_pub = rospy.Publisher("/pan_controller/command", Float64, queue_size = 10)
         self.tilt_pub = rospy.Publisher("/tilt_controller/command", Float64, queue_size = 10)
 
-        self.sim_pro_pub = rospy.Publisher("/ubiquitous_display/image", Int16, queue_size = 10)
+        self.sim_pro_pub = rospy.Publisher("/ubiquitous_display/image", Int32, queue_size = 10)
 
         self.ptm_sub = rospy.Subscriber('joy', Joy, self.callback)
 
