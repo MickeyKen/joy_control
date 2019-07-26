@@ -1,6 +1,18 @@
 <launch>
 
-  <node pkg="ud_joy_control" name="frame_node" type="frame.py" />
-  <node pkg="joy" name="connect_joy_node" type="joy_node" />
+  <arg name="sim" default="false"/>
+
+  <group unless="$(arg sim)">
+    <node pkg="ud_joy_control" name="frame_node" type="frame.py" />
+    <node pkg="joy" name="connect_joy_node" type="joy_node" />
+  </group>
+
+  <group if="$(arg sim)">
+    <node pkg="ud_joy_control" name="frame_node" type="frame.py" >
+      <remap from="/pan_controller/command" to="/ubiquitous_display/pan_controller/command"/>
+      <remap from="/tilt_controller/command" to="/ubiquitous_display/tilt_controller/command"/>
+    </node>
+    <node pkg="joy" name="connect_joy_node" type="joy_node" />
+  </group>
 
 </launch>
