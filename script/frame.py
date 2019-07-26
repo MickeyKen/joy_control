@@ -3,7 +3,7 @@
 import rospy
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Int16
 
 
 class Publishsers():
@@ -23,6 +23,10 @@ class Publishsers():
         self.tilt_msg = t
         self.tilt_pub.publish(self.tilt_msg)
 
+    def sim_pro_make(self, n):
+        self.sim_pro_msg = n
+        self.sim_pro_pub.publish(self.sim_pro_msg)
+
 class Subscribe(Publishsers):
     def __init__(self):
 
@@ -30,11 +34,15 @@ class Subscribe(Publishsers):
         self.pan_msg = Float64()
         self.tilt_msg = Float64()
 
+        self.sim_pro_msg = Int16()
+
         self.pantilt_lock = 0
 
         self.cmd_pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
         self.pan_pub = rospy.Publisher("/pan_controller/command", Float64, queue_size = 10)
         self.tilt_pub = rospy.Publisher("/tilt_controller/command", Float64, queue_size = 10)
+
+        self.sim_pro_pub = rospy.Publisher("/ubiquitous_display/image", Int16, queue_size = 10)
 
         self.ptm_sub = rospy.Subscriber('joy', Joy, self.callback)
 
@@ -71,8 +79,10 @@ class Subscribe(Publishsers):
 
         if msg.buttons[2] == 1.0:
             rospy.set_param("projector/switch", 1)
+            self.sim_pro_make(1)
         else:
             rospy.set_param("projector/switch", 0)
+            self.sim_pro_make(0)
 
 
 
